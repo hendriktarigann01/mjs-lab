@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Logo from "./Logo";
-import DemoButton from "./DemoButton";
+import Logo from "@/components/Logo";
+import DemoButton from "@/components/DemoButton";
 import { useState } from "react";
 
 interface ProjectPageProps {
@@ -13,6 +13,7 @@ interface ProjectPageProps {
   demoLink: string;
   demoLinkDescription: string;
   images: string[];
+  priority?: boolean; 
 }
 
 export default function ProjectPage({
@@ -23,6 +24,7 @@ export default function ProjectPage({
   demoLink,
   demoLinkDescription,
   images,
+  priority = false,
 }: ProjectPageProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
@@ -66,12 +68,12 @@ export default function ProjectPage({
 
   return (
     <section className="h-screen w-full flex items-center snap-start bg-white relative overflow-hidden">
-      {/* Logo - responsive positioning */}
+      {/* Logo */}
       <div className="absolute top-8 left-8 md:left-20 z-10">
         <Logo size="small" />
       </div>
 
-      {/* Overlay - hidden on mobile */}
+      {/* Overlay */}
       <div className="absolute inset-0 hidden md:flex items-center justify-center pointer-events-none">
         <Image
           src="/overlay.png"
@@ -83,12 +85,12 @@ export default function ProjectPage({
       </div>
 
       {/* Main Content */}
-      <div className="w-full h-full flex flex-col md:flex-row px-6 md:px-20 items-center justify-between gap-8 md:gap-20 lg:gap-10 z-10 relative py-24 md:py-0">
-        <div className="w-full md:w-1/2 lg:w-1/4 order-1 md:order-2 mt-16 md:mt-0">
+      <div className="w-full h-full flex flex-col md:flex-row px-6 md:px-20 items-center justify-between gap-8 md:gap-24 z-10 relative py-20 md:py-0">
+        <div className="w-full md:w-1/4 order-1 md:order-2 mt-16 md:mt-0">
           {/* Mobile */}
           <div className="block md:hidden">
             <div
-              className="relative w-full h-48 shadow-[0_4px_50px_0_rgba(175,175,175,0.2)] overflow-hidden cursor-grab active:cursor-grabbing"
+              className="relative w-full h-64 shadow-[0_4px_50px_0_rgba(175,175,175,0.2)] overflow-hidden cursor-grab active:cursor-grabbing"
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
@@ -98,6 +100,8 @@ export default function ProjectPage({
                 alt={`${title} screenshot ${currentImageIndex + 1}`}
                 fill
                 className="object-cover p-2 select-none"
+                loading={priority ? "eager" : "lazy"}
+                priority={priority && currentImageIndex === 0}
               />
             </div>
 
@@ -109,8 +113,8 @@ export default function ProjectPage({
                   onClick={() => handleSliderClick(idx)}
                   className={`h-1 rounded-full transition-all duration-300 ${
                     idx === currentImageIndex
-                      ? "w-8 bg-brand-primary"
-                      : "w-8 bg-gray-300"
+                      ? "w-12 bg-brand-primary"
+                      : "w-12 bg-gray-300"
                   }`}
                   aria-label={`Go to image ${idx + 1}`}
                 />
@@ -123,13 +127,15 @@ export default function ProjectPage({
             {images.map((img, idx) => (
               <div
                 key={idx}
-                className="relative w-full md:h-44 lg:h-48 shadow-[0_4px_50px_0_rgba(175,175,175,0.2)] overflow-hidden"
+                className="relative w-full h-48 shadow-[0_4px_50px_0_rgba(175,175,175,0.2)] overflow-hidden"
               >
                 <Image
                   src={img}
                   alt={`${title} screenshot ${idx + 1}`}
                   fill
                   className="object-cover p-3"
+                  loading={priority && idx === 0 ? "eager" : "lazy"}
+                  priority={priority && idx === 0}
                 />
               </div>
             ))}
@@ -137,8 +143,8 @@ export default function ProjectPage({
         </div>
 
         {/* Content */}
-        <div className="flex flex-col w-full md:max-w-[280px] lg:max-w-[450px] md:h-[600px] order-2 md:order-1">
-          <div className="flex flex-col justify-center md:justify-end lg:space-y-2 h-full">
+        <div className="flex flex-col w-full md:max-w-[450px] md:h-[600px] order-2 md:order-1">
+          <div className="flex flex-col justify-center md:justify-end space-y-2 h-full">
             <p className="text-brand-font text-xs md:text-sm font-normal">
               {projectNumber}
             </p>

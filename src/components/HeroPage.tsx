@@ -17,10 +17,11 @@ export default function HeroPage() {
           width={800}
           height={800}
           className="object-contain"
+          loading="lazy"
         />
       </div>
 
-      {/* CONTENT */}
+      {/* Content */}
       <div className="flex flex-col items-center justify-center relative w-full h-screen px-8">
         <div className="z-10 relative translate-y-50 md:translate-y-25">
           <p className="text-brand-primary text-xl font-light">Lab</p>
